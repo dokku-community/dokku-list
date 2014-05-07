@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+OLDIFS="$IFS"
+IFS=" "
+SUBCOMMAND="$1"
+
+if [ $# -lt 1 ] && [ "$1" != "help" ]
+then
+  SUBCOMMAND=help
+fi
+
+case "$SUBCOMMAND" in
+  list)
+    INSTANCES=$(docker ps -q | cut -d\  -f1 | tr '\n' ' ')
+    echo "Image        Name"
+    for i in $INSTANCES; do
+      echo "$i" $(docker inspect "$i" | grep Image | head -n1 | cut -d\" -f4 || true )
+    done
+    ;;
+  help)
+   cat && cat<<EOF
+    list                                            list apps and corresponding containers
+EOF
+    ;;
+esac
+
+IFS="$OLDIFS"
