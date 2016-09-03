@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 source "$PLUGIN_CORE_AVAILABLE_PATH/common/functions"
+source "$PLUGIN_AVAILABLE_PATH/ps/functions"
 
 list-main-cmd() {
   declare desc="list all dokku apps"
   local cmd="list"
   [[ "$1" == "$cmd" ]] && shift 1
-  local INSTANCES
+  local DOKKU_APP_RUNNING_CONTAINER_IDS INSTANCES
   INSTANCES=$(docker ps -q | cut -d\  -f1 | tr '\n' ' ')
   echo "Image        Name"
 
@@ -14,9 +15,13 @@ list-main-cmd() {
   IFS=" "
   SUBCOMMAND="$1"
 
-  for i in $INSTANCES; do
-    echo "$i" $(docker inspect "$i" | grep Image | grep -v sha256 | head -n1 | cut -d\" -f4 || true )
+  for app in $(dokku_apps); do
+    DOKKU_APP_RUNNING_CONTAINER_IDS=$(get_app_running_container_ids "$APP")
+    for i in $DOKKU_APP_RUNNING_CONTAINER_IDS; do
+      echo "$i" $(docker inspect "$i" | grep Image | grep -v sha256 | head -n1 | cut -d\" -f4 || true )
+    done
   done
+
 }
 
 list-main-cmd "$@"
