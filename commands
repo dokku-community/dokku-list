@@ -6,11 +6,11 @@ set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 source "$PLUGIN_BASE_PATH/common/functions"
 
 case "$1" in
-  list)
+  $PLUGIN_COMMAND_PREFIX)
     "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/subcommands/default" "$@"
     ;;
 
-  help | list:help)
+  help | $PLUGIN_COMMAND_PREFIX:help)
     help_content_func() {
       # shellcheck disable=SC2034
       declare desc="return $PLUGIN_COMMAND_PREFIX plugin help content"
