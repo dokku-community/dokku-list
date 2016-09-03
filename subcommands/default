@@ -8,15 +8,10 @@ list-main-cmd() {
   local cmd="list"
   [[ "$1" == "$cmd" ]] && shift 1
   local DOKKU_APP_RUNNING_CONTAINER_IDS INSTANCES
-  INSTANCES=$(docker ps -q | cut -d\  -f1 | tr '\n' ' ')
   echo "Image        Name"
 
-  OLDIFS="$IFS"
-  IFS=" "
-  SUBCOMMAND="$1"
-
   for app in $(dokku_apps); do
-    DOKKU_APP_RUNNING_CONTAINER_IDS=$(get_app_running_container_ids "$APP")
+    DOKKU_APP_RUNNING_CONTAINER_IDS=$(get_app_running_container_ids "$app")
     for i in $DOKKU_APP_RUNNING_CONTAINER_IDS; do
       echo "$i" $(docker inspect "$i" | grep Image | grep -v sha256 | head -n1 | cut -d\" -f4 || true )
     done
