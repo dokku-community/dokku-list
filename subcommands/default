@@ -15,7 +15,7 @@ list-main-cmd() {
   SUBCOMMAND="$1"
 
   for i in $INSTANCES; do
-    echo "$i" $(docker inspect "$i" | grep Image | head -n1 | cut -d\" -f4 || true )
+    echo "$i" $(docker inspect "$i" | grep Image | grep -v sha256 | head -n1 | cut -d\" -f4 || true )
   done
 }
 
