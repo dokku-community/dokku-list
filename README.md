@@ -1,12 +1,14 @@
 # dokku-list
 
+> Deprecated as of Dokku 0.3.14 (process management)
+
 List running Dokku apps.
 
 ## Installation
 
 ```bash
-cd /var/lib/dokku/plugins
-sudo git clone git@github.com:heichblatt/dokku-list.git list
+# on 0.4.x
+dokku plugin:install https://github.com/josegonzalez/dokku-list.git list
 ```
 
 ## Usage

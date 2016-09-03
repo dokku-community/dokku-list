@@ -1,0 +1,4 @@
+[plugin]
+description = "list apps and corresponding containers"
+version = "1.0.0"
+[plugin.config]

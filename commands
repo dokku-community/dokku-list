@@ -1,28 +1,45 @@
 #!/usr/bin/env bash
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/config"
+[[ " help $PLUGIN_COMMAND_PREFIX:help " == *" $1 "* ]] || [[ "$1" == "$PLUGIN_COMMAND_PREFIX:"* ]] || exit "$DOKKU_NOT_IMPLEMENTED_EXIT"
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
-OLDIFS="$IFS"
-IFS=" "
-SUBCOMMAND="$1"
+source "$PLUGIN_BASE_PATH/common/functions"
 
-if [ $# -lt 1 ] && [ "$1" != "help" ]
-then
-  SUBCOMMAND=help
-fi
-
-case "$SUBCOMMAND" in
+case "$1" in
   list)
-    INSTANCES=$(docker ps -q | cut -d\  -f1 | tr '\n' ' ')
-    echo "Image        Name"
-    for i in $INSTANCES; do
-      echo "$i" $(docker inspect "$i" | grep Image | head -n1 | cut -d\" -f4 || true )
-    done
+    "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/subcommands/default" "$@"
     ;;
-  help)
-   cat && cat<<EOF
-    list                                            list apps and corresponding containers
-EOF
+
+  help | list:help)
+    help_content_func() {
+      # shellcheck disable=SC2034
+      declare desc="return $PLUGIN_COMMAND_PREFIX plugin help content"
+      cat<<help_content
+    $PLUGIN_COMMAND_PREFIX, list apps and corresponding containers
+help_content
+    }
+
+    if [[ $1 = "$PLUGIN_COMMAND_PREFIX:help" ]] ; then
+      echo -e "Usage: dokku $PLUGIN_COMMAND_PREFIX[:COMMAND] <app>"
+      echo ''
+      echo "List apps and corresponding containers."
+      echo ''
+      echo 'Example:'
+      echo ''
+      echo "\$ dokku $PLUGIN_COMMAND_PREFIX"
+      echo ''
+      echo 'Additional commands:'
+      help_content_func | sort | column -c2 -t -s,
+    elif [[ $(ps -o command= $PPID) == *"--all"* ]]; then
+      help_content_func
+    else
+      cat<<help_desc
+    $PLUGIN_COMMAND_PREFIX, Plugin for listing apps and containers
+help_desc
+    fi
+    ;;
+
+  *)
+    exit "$DOKKU_NOT_IMPLEMENTED_EXIT"
     ;;
 esac
-
-IFS="$OLDIFS"
