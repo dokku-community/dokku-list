@@ -13,7 +13,7 @@ list-main-cmd() {
   for app in $(dokku_apps); do
     DOKKU_APP_RUNNING_CONTAINER_IDS=$(get_app_running_container_ids "$app")
     for i in $DOKKU_APP_RUNNING_CONTAINER_IDS; do
-      echo "${i:0:12}" $(docker inspect "$i" | grep Image | grep -v sha256 | head -n1 | cut -d\" -f4 || true )
+      echo "${i:0:12}" "${app}"
     done
   done
 
