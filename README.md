@@ -4,16 +4,22 @@
 
 List running Dokku apps.
 
-## Installation
+## requirements
+
+- dokku 0.4.0+
+- docker 1.8.x
+
+## installation
 
 ```bash
 # on 0.4.x
 dokku plugin:install https://github.com/josegonzalez/dokku-list.git list
 ```
 
-## Usage
+## usage
 
 List running apps
-```bash
-list
+
+```shell
+dokku list
 ```
