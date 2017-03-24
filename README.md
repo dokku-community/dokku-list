@@ -1,4 +1,4 @@
-# dokku-list [![Build Status](https://img.shields.io/travis/josegonzalez/dokku-list.svg?branch=master "Build Status")](https://travis-ci.org/josegonzalez/dokku-list)
+# dokku-list [![Build Status](https://img.shields.io/travis/dokku-community/dokku-list.svg?branch=master "Build Status")](https://travis-ci.org/josegonzalez/dokku-list)
 
 > Deprecated as of Dokku 0.3.14 (process management)
 
